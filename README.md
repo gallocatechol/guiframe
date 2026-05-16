@@ -28,7 +28,7 @@
 ---
 
 ```lua
-local NexusUI = loadstring(game:HttpGet("RAW_URL_HERE"))()
+local NexusUI = loadstring(game:HttpGet(https://raw.githubusercontent.com/gallocatechol/guiframe/refs/heads/main/NexusUI.lua"))()
 ```
 
 ---
@@ -347,7 +347,7 @@ NexusUI:SetAccent(Color3.fromRGB(99,  102, 241))  -- back to default indigo
 <summary><b>click to expand</b></summary>
 
 ```lua
-local NexusUI = loadstring(game:HttpGet("RAW_URL_HERE"))()
+local NexusUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/gallocatechol/guiframe/refs/heads/main/NexusUI.lua"))()
 
 local Win  = NexusUI:CreateWindow({ Title = "nexus script", Subtitle = "v1.0" })
 local Main = Win:AddTab({ Name = "Main", Icon = "🏠" })
