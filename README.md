@@ -1,48 +1,42 @@
-
-<div align="center">
-
 ```
-     ,----..                ,--,    ,--,             
-    /   /   \             ,--.'|  ,--.'|             
-    |   :     :            |  | :  |  | :     ,---.   
-    .   |  ;. /            :  : '  :  : '    '   ,'\  
-    .   ; /--`    ,--.--.  |  ' |  |  ' |   /   /   | 
-    ;   | ;  __  /       \ '  | |  '  | |  .   ; ,. : 
-    |   : |.' .'.--.  .-. ||  | :  |  | :  '   | |: : 
-    .   | '_.' : \__\/: . .'  : |__'  : |__'   | .; : 
-    '   ; : \  | ," .--.; ||  | '.'|  | '.'|   :    | 
-    '   | '/  .'/  /  ,.  |;  :    ;  :    ;\   \  /  
-    |   :    / ;  :   .'   \  ,   /|  ,   /  `----'   
-    \   \ .'  |  ,     .-./---`-'  ---`-'            
-     `---`     `--`---'
+ ,----..                ,--,    ,--,  
+/   /   \             ,--.'|  ,--.'|  
+|   :     :            |  | :  |  | :     ,---.  
+.   |  ;. /            :  : '  :  : '    '   ,'\  
+.   ; /--`    ,--.--.  |  ' |  |  ' |   /   /   |
+;   | ;  __  /       \ '  | |  '  | |  .   ; ,. :
+|   : |.' .'.--.  .-. ||  | :  |  | :  '   | |: :
+.   | '_.' : \__\/: . .'  : |__'  : |__'   | .; :
+'   ; : \  | ," .--.; ||  | '.'|  | '.'|   :    |
+'   | '/  .'/  /  ,.  |;  :    ;  :    ;\   \  /  
+|   :    / ;  :   .'   \  ,   /|  ,   /  `----'  
+\   \ .'  |  ,     .-./---`-'  ---`-'  
+ `---`     `--`---'
 ```
 
 **a fun ui library i might update in the future but yk**
 
-![Lua](https://img.shields.io/badge/Lua-5.1-blue?style=flat-square&logo=lua)
-![Roblox](https://img.shields.io/badge/Roblox-executor-red?style=flat-square)
-![Version](https://img.shields.io/badge/version-1.0.0-indigo?style=flat-square)
-
-</div>
+[![Lua](https://img.shields.io/badge/Lua-5.1-blue?style=flat-square&logo=lua)](https://lua.org) [![Roblox](https://img.shields.io/badge/Roblox-executor-red?style=flat-square)](https://roblox.com) [![Version](https://img.shields.io/badge/version-2.0.0-indigo?style=flat-square)](https://github.com/gallocatechol/guiframe)
 
 ---
 
 ```lua
-local NexusUI = loadstring(game:HttpGet(https://raw.githubusercontent.com/gallocatechol/guiframe/refs/heads/main/NexusUI.lua"))()
+local NexusUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/gallocatechol/guiframe/refs/heads/main/NexusUI.lua"))()
 ```
 
 ---
 
 ## whats included
 
-| feature | details |
-|---|---|
-| 🪟 windows | draggable, minimizable, closeable |
-| 📑 tabs | sidebar with icons, each has its own scroll area |
-| 🎛️ elements | button, toggle, slider, dropdown, textbox, keybind, label, separator |
-| 🔔 notifications | toast popups with progress bar and typed colors |
-| ✨ animations | smooth tweens on basically everything |
-| 🎨 theme | dark by default, swappable accent color |
+| feature           | details                                                                                    |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| 🪟 windows         | draggable (screen-clamped), minimizable, closeable, show/hide without destroying           |
+| 📑 tabs            | sidebar with icons, hide individual tabs, each has its own scroll area                     |
+| 🎛️ elements       | button, toggle, slider, dropdown, textbox, keybind, label, separator, color picker, progress bar |
+| 🔔 notifications   | toast popups with icon, progress bar, typed colors, click to dismiss                       |
+| ✨ animations      | smooth tweens on basically everything                                                      |
+| 🎨 theme           | dark by default, swappable accent color that live-updates all elements mid-session         |
+| 🧹 cleanup         | `Window:Destroy()` disconnects all connections — no leaks                                  |
 
 ---
 
@@ -51,19 +45,26 @@ local NexusUI = loadstring(game:HttpGet(https://raw.githubusercontent.com/galloc
 ```lua
 local Window = NexusUI:CreateWindow({
     Title    = "my script",
-    Subtitle = "by me",   -- optional, shows up smaller under the title
+    Subtitle = "by me",   -- optional
 })
 ```
 
-> you can also pass `Size` and `Position` if you want to control where it spawns, but the defaults (centered, 540×420) are fine for most scripts.
+> you can also pass `Size` and `Position` if you want to control where it spawns. defaults to centered at 540×420.
 
-the titlebar is draggable. the `─` button minimizes it down to just the bar. the `✕` closes it with a little animation.
+the titlebar is draggable and clamped to the screen edges. `─` minimizes it to just the bar. `✕` closes it with an animation and cleans everything up.
+
+**window methods**
+
+```lua
+Window:SetTitle("new title")       -- update the title text at runtime
+Window:SetSubtitle("new sub")      -- update the subtitle text at runtime
+Window:Toggle()                    -- show/hide without destroying
+Window:Destroy()                   -- fully close and clean up all connections
+```
 
 ---
 
 ## tabs
-
-every window has a sidebar. you add tabs to it, and each tab has its own scrollable content area.
 
 ```lua
 local Main   = Window:AddTab({ Name = "Main",   Icon = "⚡" })
@@ -71,9 +72,12 @@ local Combat = Window:AddTab({ Name = "Combat", Icon = "⚔️" })
 local Misc   = Window:AddTab({ Name = "Misc",   Icon = "🔧" })
 ```
 
-> `Icon` is optional — just leave it out if you don't want one. first tab added gets selected automatically.
+> `Icon` is optional. first tab added gets selected automatically.
 
-from here, everything gets added to a tab — `Main:AddButton(...)`, `Combat:AddToggle(...)`, etc.
+```lua
+Main:SetVisible(false)   -- hide a tab from the sidebar at runtime
+Main:SetVisible(true)    -- bring it back
+```
 
 ---
 
@@ -81,11 +85,10 @@ from here, everything gets added to a tab — `Main:AddButton(...)`, `Combat:Add
 
 ### `AddSection`
 
-a small label to group things visually. doesn't do anything functional, just helps organize.
+a small label to group things visually.
 
 ```lua
 Main:AddSection("movement")
-Main:AddSection("combat stuff")
 ```
 
 ---
@@ -94,123 +97,105 @@ Main:AddSection("combat stuff")
 
 ```lua
 Main:AddButton({
-    Name     = "do the thing",
-    Callback = function()
-        -- runs when clicked
+    Name        = "do the thing",
+    Description = "optional subtitle line",   -- shows smaller text below the name
+    Variant     = "default",                  -- "default" | "accent" | "danger" | "ghost"
+    Callback    = function()
         print("clicked!")
     end
 })
 ```
 
-has a hover effect and a little click animation so its chill yk.
+`Variant` controls the look:
+
+| variant     | style                                          |
+| ----------- | ---------------------------------------------- |
+| `"default"` | surface bg, turns accent on hover (default)    |
+| `"accent"`  | solid accent color, white text                 |
+| `"danger"`  | solid red, white text                          |
+| `"ghost"`   | transparent, subtle hover fill                 |
 
 ---
 
 ### `AddToggle`
 
-on/off switch. returns an object so you can read or change the value later.
-
 ```lua
 local myToggle = Main:AddToggle({
-    Name     = "god mode",
-    Default  = false,        -- starts off by default
-    Callback = function(val)
-        if val then
-            -- turn it on
-        else
-            -- turn it off
-        end
+    Name        = "god mode",
+    Description = "optional subtitle",   -- shows smaller text below the name
+    Default     = false,
+    Callback    = function(val)
+        -- runs on change
     end
 })
 ```
 
-<details>
-<summary><b>using the return object</b></summary>
-
 ```lua
-myToggle:Set(true)            -- force a value from code
-
-myToggle:OnChanged(function(val)
-    print("toggle is now", val)
-end)
-
-print(myToggle.Value)         -- read current state
+myToggle:Set(true)
+myToggle:OnChanged(function(val) print(val) end)
+print(myToggle.Value)
 ```
-
-</details>
 
 ---
 
 ### `AddSlider`
-
-a draggable bar between a min and max. great for speeds, sizes, anything numeric.
 
 ```lua
 local mySlider = Main:AddSlider({
     Name     = "walk speed",
     Min      = 16,
     Max      = 250,
-    Step     = 1,            -- how much it increments per tick
+    Step     = 1,
     Default  = 16,
+    Suffix   = "",     -- appended to the value label, e.g. " px", "%", " ms"
     Callback = function(val)
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = val
     end
 })
 ```
 
-> `Step` controls precision — use `1` for whole numbers, `0.1` for decimals, etc.
-
-<details>
-<summary><b>using the return object</b></summary>
+> float steps work correctly — `Step = 0.1` won't produce `0.30000000004`.
+> `Suffix` just adds a label, it doesn't affect the value.
 
 ```lua
-mySlider:Set(100)             -- jump to a value programmatically
-
-mySlider:OnChanged(function(val)
-    print("slider moved to", val)
-end)
-
-print(mySlider.Value)         -- current value
+mySlider:Set(100)
+mySlider:OnChanged(function(val) print(val) end)
+print(mySlider.Value)
 ```
-
-</details>
 
 ---
 
 ### `AddTextBox`
 
-an input field. fires the callback when the user clicks away or presses enter.
-
 ```lua
 local myInput = Main:AddTextBox({
     Name         = "teleport to player",
     Placeholder  = "username...",
-    Default      = "",            -- starting text, optional
-    ClearOnFocus = true,          -- clears when you click in (default: true)
+    Default      = "",
+    ClearOnFocus = true,
+    OnFocus      = function()
+        -- fires when the box is clicked into
+    end,
+    OnChanged    = function(text)
+        -- fires live on every keystroke
+    end,
     Callback     = function(text, pressedEnter)
-        -- text is whatever they typed
-        -- pressedEnter is true if they hit enter, false if they clicked away
-        print("got:", text)
+        -- fires on focus lost (click away or enter)
     end
 })
 ```
 
-<details>
-<summary><b>using the return object</b></summary>
+> the input border glows accent color while focused.
 
 ```lua
-myInput:Get()          -- returns the current text
-myInput:Set("hello")   -- sets the text from code
-myInput.Box            -- the actual TextBox instance if you need it directly
+myInput:Get()
+myInput:Set("hello")
+myInput.Box   -- the raw TextBox instance
 ```
-
-</details>
 
 ---
 
 ### `AddDropdown`
-
-a menu that opens and lets you pick one option from a list.
 
 ```lua
 local myDropdown = Main:AddDropdown({
@@ -223,46 +208,71 @@ local myDropdown = Main:AddDropdown({
 })
 ```
 
-<details>
-<summary><b>using the return object</b></summary>
+> lists with more than 5 options scroll. a search bar filters options as you type — no config needed, it's always there.
 
 ```lua
-myDropdown:Set("blue")        -- set selected option from code
-
-myDropdown:Refresh({ "option a", "option b", "option c" })  -- swap the list entirely
-
-myDropdown:OnChanged(function(val)
-    print("now selected:", val)
-end)
-
-print(myDropdown.Value)       -- currently selected option
+myDropdown:Set("blue")
+myDropdown:Refresh({ "option a", "option b" })   -- swap the whole list
+myDropdown:OnChanged(function(val) print(val) end)
+print(myDropdown.Value)
 ```
 
-</details>
+---
+
+### `AddColorPicker`
+
+opens an HSV picker panel with a saturation/value square and a hue bar. shows a live hex readout.
+
+```lua
+local myColor = Main:AddColorPicker({
+    Name     = "beam color",
+    Default  = Color3.fromRGB(99, 102, 241),
+    Callback = function(color)
+        -- fires whenever the color changes while dragging
+    end
+})
+```
+
+```lua
+myColor:Set(Color3.fromRGB(255, 0, 0))
+myColor:OnChanged(function(color) print(color) end)
+print(myColor.Value)   -- current Color3
+```
+
+---
+
+### `AddProgressBar`
+
+a read-only bar you control from code. useful for loading states, timers, health displays, etc.
+
+```lua
+local myBar = Main:AddProgressBar({
+    Name    = "loading",
+    Default = 0,    -- 0 to 1
+})
+```
+
+```lua
+myBar:Set(0.75)          -- 0 to 1
+myBar:SetLabel("done")   -- update the name label
+```
 
 ---
 
 ### `AddLabel`
 
-just a line of text. useful for status, values, info — anything you want to display but not interact with.
-
 ```lua
 local myLabel = Main:AddLabel("status: idle")
 
-myLabel:Set("status: running")  -- update it later from anywhere
-```
-
-pass a `Color3` as the second arg for a custom color:
-
-```lua
-Main:AddLabel("something went wrong", Color3.fromRGB(248, 113, 113))
+myLabel:Set("status: running")
+myLabel:Set("error", Color3.fromRGB(248, 113, 113))   -- optional color arg
 ```
 
 ---
 
 ### `AddSeparator`
 
-a thin horizontal line. use it to break up content when `AddSection` is too heavy.
+a thin horizontal line.
 
 ```lua
 Main:AddSeparator()
@@ -272,92 +282,91 @@ Main:AddSeparator()
 
 ### `AddKeybind`
 
-lets the user set their own hotkey. clicking the button in the ui puts it in listen mode — next key they press becomes the bind.
-
 ```lua
 local myKeybind = Main:AddKeybind({
     Name    = "toggle menu",
     Default = Enum.KeyCode.RightShift,
     OnPress = function()
-        -- fires every time the bound key is pressed (not while rebinding)
-        print("key pressed!")
+        -- fires on keypress (not while rebinding)
     end,
     Callback = function(newKey)
         -- fires when the user picks a new key
-        print("rebound to:", newKey.Name)
     end
 })
 ```
 
-<details>
-<summary><b>using the return object</b></summary>
-
 ```lua
-myKeybind:OnChanged(function(key)
-    print("new key:", key.Name)
-end)
-
-print(myKeybind.Value)   -- current KeyCode
+myKeybind:OnChanged(function(key) print(key.Name) end)
+print(myKeybind.Value)
 ```
-
-</details>
 
 ---
 
 ## notifications
 
-pops a toast in the bottom-right corner. good for giving feedback so the user knows something actually happened.
-
 ```lua
 NexusUI:Notify({
     Title    = "done!",
     Message  = "the thing ran successfully.",
-    Duration = 4,         -- seconds before it disappears, default is 4
-    Type     = "success"  -- changes the accent color
+    Duration = 4,
+    Type     = "success"
 })
 ```
 
-| type | color | when to use |
-|---|---|---|
-| `"info"` | 🟣 indigo | general updates, default |
-| `"success"` | 🟢 green | something worked |
-| `"warning"` | 🟡 yellow | heads up, non-critical |
-| `"error"` | 🔴 red | something failed |
+| type        | color    | icon |
+| ----------- | -------- | ---- |
+| `"info"`    | 🟣 indigo | ℹ    |
+| `"success"` | 🟢 green  | ✓    |
+| `"warning"` | 🟡 yellow | ⚠    |
+| `"error"`   | 🔴 red    | ✕    |
 
-there's a progress bar at the bottom that drains in real time so the user knows how long it'll stay up.
+click the notification to dismiss it early.
 
 ---
 
 ## changing the accent color
 
-the default accent is indigo. swap it out before you build your window and everything inherits the new color automatically.
+`SetAccent` live-updates every element that uses the accent color — tab highlights, slider fills, toggle tracks, section labels, keybind buttons, dropdown text, progress bars — all of it, no recreating anything.
 
 ```lua
 NexusUI:SetAccent(Color3.fromRGB(239, 68,  68))   -- red
 NexusUI:SetAccent(Color3.fromRGB(34,  197, 94))   -- green
 NexusUI:SetAccent(Color3.fromRGB(234, 179, 8))    -- yellow
-NexusUI:SetAccent(Color3.fromRGB(99,  102, 241))  -- back to default indigo
+NexusUI:SetAccent(Color3.fromRGB(99,  102, 241))  -- back to indigo
 ```
+
+---
+
+## cleanup
+
+```lua
+Window:Destroy()       -- closes one window, disconnects all its signal connections
+NexusUI:DestroyAll()   -- tears down every window and removes the ScreenGui entirely
+```
+
+> `Window:Destroy()` is called automatically when the user clicks `✕`. you only need to call it manually if you want to close it from code.
 
 ---
 
 ## full example
 
 <details>
-<summary><b>click to expand</b></summary>
+<summary>click to expand</summary>
 
 ```lua
 local NexusUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/gallocatechol/guiframe/refs/heads/main/NexusUI.lua"))()
 
-local Win  = NexusUI:CreateWindow({ Title = "nexus script", Subtitle = "v1.0" })
-local Main = Win:AddTab({ Name = "Main", Icon = "🏠" })
-local Misc = Win:AddTab({ Name = "Misc", Icon = "🔧" })
+local Win    = NexusUI:CreateWindow({ Title = "nexus script", Subtitle = "v2.0" })
+local Main   = Win:AddTab({ Name = "Main",     Icon = "🏠" })
+local Visual = Win:AddTab({ Name = "Visuals",  Icon = "🎨" })
+local Misc   = Win:AddTab({ Name = "Misc",     Icon = "🔧" })
 
--- main tab
+-- ── main ────────────────────────────────────────
 Main:AddSection("player")
 
 Main:AddSlider({
     Name = "walk speed", Min = 16, Max = 250, Step = 1, Default = 16,
+    Suffix = " wu",
     Callback = function(v)
         game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = v
     end
@@ -370,37 +379,45 @@ Main:AddSlider({
     end
 })
 
+local loading = Main:AddProgressBar({ Name = "esp loading", Default = 0 })
+
 Main:AddSeparator()
 Main:AddSection("combat")
 
 Main:AddToggle({
-    Name = "big hitbox", Default = false,
-    Callback = function(val)
-        -- hitbox logic here
+    Name        = "big hitbox",
+    Description = "expands the hitbox for easier hits",
+    Default     = false,
+    Callback    = function(val)
+        -- hitbox logic
     end
 })
 
 Main:AddButton({
-    Name = "run something",
+    Name     = "run something",
+    Variant  = "accent",
     Callback = function()
-        -- your logic here
+        for i = 1, 10 do
+            task.wait(0.1)
+            loading:Set(i / 10)
+        end
         NexusUI:Notify({ Title = "done", Message = "ran successfully.", Type = "success" })
     end
 })
 
--- misc tab
-Misc:AddSection("settings")
+-- ── visuals ─────────────────────────────────────
+Visual:AddSection("colors")
 
-Misc:AddKeybind({
-    Name    = "ui toggle",
-    Default = Enum.KeyCode.RightShift,
-    OnPress = function()
-        -- toggle ui visibility
+local beamColor = Visual:AddColorPicker({
+    Name     = "beam color",
+    Default  = Color3.fromRGB(99, 102, 241),
+    Callback = function(c)
+        -- apply color somewhere
     end
 })
 
-Misc:AddDropdown({
-    Name    = "accent color",
+Visual:AddDropdown({
+    Name    = "accent preset",
     Options = { "indigo", "red", "green", "yellow" },
     Default = "indigo",
     Callback = function(val)
@@ -413,6 +430,35 @@ Misc:AddDropdown({
         NexusUI:SetAccent(colors[val])
     end
 })
+
+-- ── misc ─────────────────────────────────────────
+Misc:AddSection("settings")
+
+Misc:AddKeybind({
+    Name    = "ui toggle",
+    Default = Enum.KeyCode.RightShift,
+    OnPress = function()
+        Win:Toggle()
+    end
+})
+
+Misc:AddTextBox({
+    Name        = "teleport to player",
+    Placeholder = "username...",
+    Callback    = function(text, enter)
+        if enter and text ~= "" then
+            print("tp to:", text)
+        end
+    end
+})
+
+Misc:AddButton({
+    Name     = "destroy ui",
+    Variant  = "danger",
+    Callback = function()
+        NexusUI:DestroyAll()
+    end
+})
 ```
 
 </details>
@@ -422,19 +468,19 @@ Misc:AddDropdown({
 ## tips
 
 > [!TIP]
-> **organize with sections** — `AddSection` before groups of related elements makes the ui way easier to read at a glance. don't skip it.
+> **organize with sections** — `AddSection` before groups of related elements makes the ui way easier to read. don't skip it.
 
 > [!TIP]
-> **keep references to return objects** — toggles, sliders, and dropdowns all return objects with `.Value`, `:Set()`, and `:OnChanged()`. if you need to read or change them from other callbacks, store them in a variable up top.
+> **keep references to return objects** — toggles, sliders, dropdowns, color pickers, and progress bars all return objects with `.Value`, `:Set()`, and `:OnChanged()`. store them in a variable if you need to interact with them from other callbacks.
 
 > [!NOTE]
-> **Callback vs OnChanged** — `Callback` in the config table and `:OnChanged(fn)` on the return object do the same thing. use `Callback` for the main logic and `:OnChanged()` if you need to hook in extra listeners later.
+> **Callback vs OnChanged** — `Callback` in the config table and `:OnChanged(fn)` on the return object both work. use `Callback` for the main logic, `:OnChanged()` if you need to attach extra listeners later.
 
 > [!NOTE]
-> **keybind edge case is handled** — `OnPress` won't fire while the user is actively rebinding the key. you don't need to guard against that yourself.
+> **keybind edge case is handled** — `OnPress` won't fire while the user is actively rebinding. you don't need to guard against that.
 
 > [!TIP]
-> **notify liberally** — a quick `NexusUI:Notify(...)` after anything that isn't instant gives users confidence that the script is actually doing something. one line, worth it.
+> **notify liberally** — a quick `NexusUI:Notify(...)` after anything that isn't instant gives users confidence the script is actually doing something.
 
-> [!NOTE]
-> **step on sliders matters** — `Step = 1` gives whole numbers. `Step = 0.5` gives halves. the display value snaps to the step automatically.
+> [!TIP]
+> **live accent** — `SetAccent` updates every existing element. drop it in a dropdown callback for an in-ui theme switcher with zero extra work.
