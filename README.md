@@ -14,7 +14,7 @@
  `---`     `--`---'
 ```
 
-**a fun ui library i might update in the future but yk**
+**V3 is fucked ngl**
 
 [![Lua](https://img.shields.io/badge/Lua-5.1-blue?style=flat-square&logo=lua)](https://lua.org) [![Roblox](https://img.shields.io/badge/Roblox-executor-red?style=flat-square)](https://roblox.com) [![Version](https://img.shields.io/badge/version-3.0.0-indigo?style=flat-square)](https://github.com/gallocatechol/guiframe)
 
@@ -48,7 +48,7 @@ local NexusUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/gallo
 ```lua
 local Window = NexusUI:CreateWindow({
     Title    = "my script",
-    Subtitle = "v3.0",   -- optional
+    Subtitle = "v3.0",   -- 
 })
 ```
 
